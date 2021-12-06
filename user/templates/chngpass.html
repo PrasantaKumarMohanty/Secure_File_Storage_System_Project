@@ -1,0 +1,91 @@
+{% include 'common/top.html' %}
+
+    <!--Breadcrumb Start-->
+    <section id="breadcrumb">
+      <div class="container">
+        <ol class="breadcrumb">
+          <li><a href="{% url 'dashboard' %}">Dashboard</a></li>
+          <li class="active">Change Password</li>
+        </ol>
+      </div>
+    </section>
+    <!--Breadcrumb End-->
+
+    <section id="main">
+      <div class="container">
+        <div class="row">
+
+            {% include 'common/left.html' %}
+
+          <div class="col-md-9">
+              <!-- History -->
+              <div class="panel panel-default">
+                <div class="panel-heading main-color-bg">
+                  <h3 class="panel-title ">Change Password</h3>
+                </div>
+                <div class="panel-body" align='center'>
+
+                    
+
+       <section class="content">
+       <div class="row">
+           <div class="col-md-1"></div>
+            <div class="col-md-10">
+
+          <!-- Profile Image -->
+          <div class="box box-info">
+            <div class="box-body box-profile">
+
+
+               <form class="form-horizontal" action="{% url 'chngpass' %}" method="post">{% csrf_token %}
+                  <div class="form-group">
+                    <label for="inputUsername" class="col-sm-3 control-label">Old Password</label>
+
+                    <div class="col-sm-8">
+                      <input type="Password" class="form-control" id="inputName" name="old_pass" placeholder="Old Password">
+                    </div>
+                  </div>
+                  <div class="form-group">
+                    <label for="inputName" class="col-sm-3 control-label">New Password</label>
+
+                    <div class="col-sm-8">
+                      <input type="Password" class="form-control" id="inputName" name="pass1" placeholder="New Password">
+                    </div>
+                  </div>
+                  <div class="form-group">
+                    <label for="inputName" class="col-sm-3 control-label">Confirm Password</label>
+
+                    <div class="col-sm-8">
+                      <input type="Password" class="form-control" id="inputName" name="pass2" placeholder="Confirm Password">
+                    </div>
+                  </div>
+                  
+                  <input type="submit" class="btn btn-primary btn-block" value="Submit">
+                </form>
+
+            </div>
+            <!-- /.box-body -->
+          </div>
+        </div>
+       </div>
+    </section>
+                </div>
+              </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    {% if messages %}
+        <script>
+            function myFunction() {
+                {% for message in messages %}
+                      alert("{{ message }}");
+                {% endfor %}
+            }
+            myFunction()
+        </script>
+    {% endif %}
+
+
+{% include 'common/foot.html' %}

@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+
+<html>
+  <head>
+      {% load static %}
+      <meta  charset="utf-8"/>
+      <title>Give a snapshot</title>
+  <!--    <script type="text/javascript" src="{% static 'js/myscript.js' %}"></script>  -->
+
+      <!--   new code -->
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-eOJMYsd53ii+scO/bJGFsiCZc+5NDVN2yr8+0RDqr0Ql0h+rP48ckxlpbzKgwra6" crossorigin="anonymous">
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta3/dist/js/bootstrap.bundle.min.js" integrity="sha384-JEW9xMcG8R+pH31jmWH6WWP0WintQrMb4s7ZOdauHnUtxwoG2vI5DkLtS3qm9Ekf" crossorigin="anonymous"></script>
+<style type="text/css">
+  
+
+#cont{
+  position: relative;
+
+}
+.son{
+  position: absolute;
+  top:0;
+  left:0;
+
+}
+
+#control{
+  position:absolute;
+
+  left:0;
+
+  z-index: 50;
+  background: HoneyDew ;
+  opacity:0.7;
+  color:#fff;
+  text-align: center;
+
+}
+#snap{
+  background-color: dimgray ;
+
+}
+#retake{
+  background-color: coral ;
+
+}
+
+#close{
+  background-color: lightcoral ;
+
+}
+.hov{
+  opacity:.8;
+  transition: all .5s;
+}
+.hov:hover{
+  opacity:1;
+
+  font-weight: bolder;
+}
+/*#canvas{
+  z-index: 1;
+}
+#video{
+  z-index: 3;
+}*/
+
+</style>
+
+
+
+<script type="text/javascript">
+       $(document).ready(function() {
+  $('#control').hide();
+  $('#video').resize(function(){
+    $('#cont').height($('#video').height());
+      $('#cont').width($('#video').width());
+      $('#control').height($('#video').height()*0.1);
+      $('#control').css('top',$('#video').height()*0.9 );
+        $('#control').width($('#video').width());
+        $('#control').show();
+});
+function opencam(){
+  navigator.getUserMedia= navigator.getUserMedia ||   navigator.webkitGetUserMedia || navigator.mozGetUserMedia || navigator.oGetUserMedia || navigator.msGetUserMedia ;
+  if(navigator.getUserMedia)
+  {
+    navigator.getUserMedia({video:true },  streamWebCam ,throwError) ;
+
+
+  }
+}
+
+function closecam(){
+
+  video.pause();
+
+  try {
+    video.srcObject = null;
+  } catch (error) {
+    video.src =null;
+  }
+
+  var track = strr.getTracks()[0];  // if only one media track
+  // ...
+  track.stop();
+
+}
+  var video= document.getElementById('video');
+  var canvas= document.getElementById('canvas');
+  var context= canvas.getContext('2d');
+  var strr;
+  function streamWebCam(stream){
+  const  mediaSource = new MediaSource(stream);
+  try {
+      video.srcObject = stream;
+    } catch (error) {
+      video.src = URL.createObjectURL(mediaSource);
+    }
+    video.play();
+    strr=stream;
+  }
+  function throwError(e){
+    alert(e.name);
+  }
+$('#open').click(function(event) {
+  opencam();
+   $('#control').show();
+});
+$('#close').click(function(event) {
+  closecam();
+});
+  $('#snap').click(function(event) {
+      canvas.width=video.clientWidth;
+      canvas.height=video.clientHeight;
+      context.drawImage(video,0,0);
+      $('#vid').css('z-index','20');
+      $('#capture').css('z-index','30');
+      $("#mytext").val(canvas.toDataURL('image/jpeg'));
+      $("#form_button").show();
+  });
+$('#retake').click(function(event) {
+$('#vid').css('z-index','30');
+$('#capture').css('z-index','20');
+});
+});
+</script>
+
+        <div class="container-fluid" id='camcam'>
+          <a class='btn btn-block btn-primary text-white' id='open'> Open cam</a>
+          <div class="row">
+            <div class="col-md- offset-1">
+
+
+
+
+              <div id="wrap">
+
+              <div id='cont'>
+
+                <div id="vid" class='son' >
+              <video id='video'></video>
+                </div>
+
+                <div id="capture" class='son'>
+              <canvas id='canvas'></canvas>
+              <canvas id='blank' style='display:none;'></canvas>
+                </div>
+
+                <div id="control">
+                  <div class="container">
+                  <div class="row">
+                    <div class="col-md-4"><a id='retake' class='btn btn-block m-1 hov'>Re Tacke</a></div>
+                    <div class="col-md-4"><a id='snap' class='btn btn-block m-1 hov'>Capture</a></div>
+                   
+
+                  </div>
+                    </div>
+ 
+
+
+                </div>
+
+              </div>
+
+              </div>
+
+
+
+
+
+
+
+
+
+            </div>
+          </div>
+        </div>
+<form method="post" action="saveimg" id="form">
+        {% csrf_token %}
+        <input type="text" id="mytext" name="imagedata" />
+        <center><button id="form_button">Submit</button></center>
+    </form>
+Hello
+
+   <!--   end new code    -->
+ 
+
+<!--
+  <body onload="init();">
+    <center><h2>Image Verification Page</h2>
+    {% if messages %}
+        <ul class="message">
+        {% for message in messages %}
+            <li class="error"><p style="color: red">{{ message }}</p></li>
+        {% endfor %}
+        </ul>
+    {% endif %}
+    Click on the Start WebCam button.
+
+    <p>
+    <button onclick="startWebcam();">Start WebCam</button>
+    <button onclick="snapshot();" id="snap" disabled>Take Snapshot</button>
+    </p>
+
+    <video onclick="snapshot(this);" width=400 height=400 id="video" autoplay></video>
+    <br>
+	<canvas  id="myCanvas" width="400" height="300"></canvas>
+-->
+   
+    </center>
+  </body>
+</html>
